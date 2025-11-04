@@ -14,8 +14,13 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 
 public class GameScreen implements Screen {
 
+
+    private Texture Lava;
     private Texture MacDoodle;
+
+    private Sprite LavaSprite;
     private Sprite MacDoodleSprite;
+
 
     private SpriteBatch spriteBatch;
     private FitViewport viewport;
@@ -45,6 +50,12 @@ public class GameScreen implements Screen {
         MacDoodle = new Texture("MacDoodle.png");
         MacDoodleSprite = new Sprite(MacDoodle);
         MacDoodleSprite.setSize(1.4f, 1.4f);
+
+        //carrega lava
+        Lava = new Texture("lava.png");
+        LavaSprite = new Sprite(Lava);
+        LavaSprite.setSize(worldWidth, 0.8f);
+        LavaSprite.setPosition(0f, 0f);
 
         // coloca o player inicialmente no centro do mundo
         MacDoodleSprite.setPosition(
@@ -112,13 +123,20 @@ public class GameScreen implements Screen {
         spriteBatch.setProjectionMatrix(camera.combined);
 
         spriteBatch.begin();
-
-        // desenha paralaxe antes do player
         parallaxBg.draw(spriteBatch, camera);
-
-        // desenha player
         MacDoodleSprite.draw(spriteBatch);
+        spriteBatch.end();
 
+        spriteBatch.setProjectionMatrix(viewport.getCamera().combined);
+
+        spriteBatch.begin();
+        float lavaHeight = 2f;
+        float cameraBottom = camera.position.y - viewport.getWorldHeight() / 2f;
+        float lavaOffset = -0.4f;
+
+        LavaSprite.setSize(viewport.getWorldWidth(), lavaHeight);
+        LavaSprite.setPosition(camera.position.x - viewport.getWorldWidth() / 2f, cameraBottom + lavaOffset);
+        LavaSprite.draw(spriteBatch);
         spriteBatch.end();
     }
 
@@ -142,5 +160,6 @@ public class GameScreen implements Screen {
     public void dispose() {
         MacDoodle.dispose();
         parallaxBg.dispose();
+        Lava.dispose();
     }
 }
